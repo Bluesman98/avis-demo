@@ -4,14 +4,15 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 
 const fetchTodos= async (q: string) => {
-  const data = await client.models.Todo.list({
+  const json = await client.models.Todo.list({
     filter: {
       content: {
         beginsWith: q
       }
     }
   })
-  console.log(data);
+  console.log(json.data);
+  return json.data;
 };
 
 
@@ -32,6 +33,11 @@ const fetchTodos= async (q: string) => {
     client.models.Todo.delete({ id })
   }
 
+  async function filterTodos(filterString: string) {
+    const data = fetchTodos(filterString)
+    setTodos([...await data])
+  }
+
   const [searchItem, setSearchItem] = useState('')
 
   const handleInputChange = (e: { target: { value: any; }; }) => { 
@@ -41,7 +47,7 @@ const fetchTodos= async (q: string) => {
 
   function keyPress(e: { keyCode: number; }){
     if(e.keyCode == 13){
-      fetchTodos(searchItem)
+      filterTodos(searchItem)
     }
  }
 
@@ -56,7 +62,7 @@ const fetchTodos= async (q: string) => {
             onKeyDown={keyPress}
             placeholder='Type to search'
         />
-        <button onClick={()=>{fetchTodos(searchItem)}}>search</button>
+        <button onClick={()=>{filterTodos(searchItem)}}>search</button>
         </div>
         }
       <h1>My todos</h1>
