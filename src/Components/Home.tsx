@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-
 const client = generateClient<Schema>();
 
-function Home() {
+const fetchTodos= async (q: string) => {
+  const data = await client.models.Todo.list({
+    filter: {
+      content: {
+        beginsWith: q
+      }
+    }
+  })
+  console.log(data);
+};
+
+
+ function Home() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   useEffect(() => {
@@ -16,15 +27,40 @@ function Home() {
   function createTodo() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
   }
-
     
   function deleteTodo(id: string) {
     client.models.Todo.delete({ id })
   }
 
+  const [searchItem, setSearchItem] = useState('')
+
+  const handleInputChange = (e: { target: { value: any; }; }) => { 
+    const searchTerm = e.target.value;
+    setSearchItem(searchTerm)
+  }
+
+  function keyPress(e: { keyCode: number; }){
+    if(e.keyCode == 13){
+      fetchTodos(searchItem)
+    }
+ }
+
   return (
     <main>
+        {
+          <div>      
+        <input
+            type="text"
+            value={searchItem}
+            onChange={handleInputChange}
+            onKeyDown={keyPress}
+            placeholder='Type to search'
+        />
+        <button onClick={()=>{fetchTodos(searchItem)}}>search</button>
+        </div>
+        }
       <h1>My todos</h1>
+
       <button onClick={createTodo}>+ new</button>
       <ul>
         {todos.map((todo) => (
