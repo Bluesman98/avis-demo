@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.ul{
+ background-color: 'none' !important;
+ border: 'none' !important; 
+ border-radius: 'none'!important;
+}

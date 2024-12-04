@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { FileUploader } from '@aws-amplify/ui-react-storage';
+import { list } from 'aws-amplify/storage';
+import Todo from './Todo'
+
+const fetchStorage = async () =>{
+  const result = await list({
+	path: 'Pdf_Storage/',
+  options: {
+    bucket: "bucket"
+  }
+});
+console.log(result)
+}
+
 const client = generateClient<Schema>();
 
 const fetchTodos= async (q: string) => {
@@ -15,7 +29,6 @@ const fetchTodos= async (q: string) => {
   return json.data;
 };
 
-
  function Home() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
@@ -23,16 +36,13 @@ const fetchTodos= async (q: string) => {
     client.models.Todo.observeQuery().subscribe({
       next: (data) => setTodos([...data.items]),
     });
+    fetchStorage();
   }, []);
 
   function createTodo() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
   }
     
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
-  }
-
   async function filterTodos(filterString: string) {
     const data = fetchTodos(filterString)
     setTodos([...await data])
@@ -53,6 +63,12 @@ const fetchTodos= async (q: string) => {
 
   return (
     <main>
+        <FileUploader
+          acceptedFileTypes={['*']}
+          path="Pdf_Storage/"
+          maxFileCount={1}
+          isResumable
+        /> 
         {
           <div>      
         <input
@@ -65,12 +81,13 @@ const fetchTodos= async (q: string) => {
         <button onClick={()=>{filterTodos(searchItem)}}>search</button>
         </div>
         }
+
       <h1>My todos</h1>
 
       <button onClick={createTodo}>+ new</button>
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id} onClick={() => deleteTodo(todo.id)} >{todo.content}</li>
+          <Todo key={todo.id} client = {client} todo = {todo}/>
         ))}
       </ul>
       <div>
