@@ -11,17 +11,18 @@ const schema = a.schema({
     .model({
       content: a.string(),
     })
-    .authorization((allow) => [allow.guest()]),
-});
-
-export type Schema = ClientSchema<typeof schema>;
+}).authorization(allow => [
+  allow.authenticated().to(['read','create','delete']),
+]);
 
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'userPool',
   },
 });
+
+export type Schema = ClientSchema<typeof schema>;
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

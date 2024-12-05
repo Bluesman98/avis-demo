@@ -26,7 +26,6 @@ function MultipleFileInput(props: any) {
   };
 
   async function upload() {
-
     for (const file of files) {
       try {
         const result = await uploadData({
@@ -49,7 +48,7 @@ function MultipleFileInput(props: any) {
     <div>
       <input type="file" multiple onChange={handleFileInput} />
       <button
-        onClick={() =>
+        onClick={() => 
           upload()
         }
       >Upload</button>

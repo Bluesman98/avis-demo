@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
-import { FileUploader } from '@aws-amplify/ui-react-storage';
+//import { FileUploader } from '@aws-amplify/ui-react-storage';
 import Todo from './Todo'
 
 function Home(props: any) {
@@ -48,12 +48,12 @@ function Home(props: any) {
 
   return (
     <main>
-      <FileUploader
+      {/*<FileUploader
         acceptedFileTypes={['*']}
         path="Pdf_Storage/"
         maxFileCount={1}
         isResumable
-      />
+      />*/}
       {
         <div>
           <input
@@ -70,7 +70,7 @@ function Home(props: any) {
       <h1>My todos</h1>
 
       <button onClick={createTodo}>+ new</button>
-      <ul>
+      <ul style={{maxHeight: '40rem'}}>
         {todos.map((todo) => (
           <Todo key={todo.id} client={props.client} todo={todo} />
         ))}

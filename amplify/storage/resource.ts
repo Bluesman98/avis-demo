@@ -4,7 +4,7 @@ export const storage = defineStorage({
   name: 'bucket',
   access: (allow) => ({
     'Pdf_Storage/*': [
-      allow.guest.to(['read','write']),
+      allow.authenticated.to(['read','write','delete']),
     
     ]
   })
