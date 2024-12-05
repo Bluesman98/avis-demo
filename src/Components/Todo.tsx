@@ -9,9 +9,9 @@ function Todo(props: any) {
         getTodoUrl(props.todo.content)
     }, []);
 
-    function deleteTodo(id: string) {
+    /*function deleteTodo(id: string) {
         props.client.models.Todo.delete({ id })
-      }
+      }*/
     
       async function getTodoUrl(id: any) {
         const linkToStorageFile = await getUrl({
