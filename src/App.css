@@ -1,8 +1,18 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0 !important;
+  height: 100% !important;
+}
+
+main {
+display: flex;
+flex-direction: column;
+height: 100%;
+}
+
+.content{
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .logo {
@@ -41,8 +51,6 @@
   color: #888;
 }
 
-.ul {
-  background-color: "none" !important;
-  border: "none" !important;
-  border-radius: "none" !important;
-}
+
+
+

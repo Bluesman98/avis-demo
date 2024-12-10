@@ -5,6 +5,7 @@ export const storage = defineStorage({
   access: (allow) => ({
     'Pdf_Storage/*': [
       allow.authenticated.to(['read','write','delete']),
+      allow.guest.to(['read','write','delete']),
     
     ]
   })

@@ -9,16 +9,25 @@ and "delete" any "Todo" records.
 const schema = a.schema({
   Todo: a
     .model({
-      content: a.string(),
+      barcode: a.string(),
+      vendorName: a.string(),
+      invoiceDate: a.string(),
+      entryDate: a.string(),
+      taxCode: a.string(),
+      url: a.string(),
     })
 }).authorization(allow => [
   allow.authenticated().to(['read','create','delete']),
+  allow.guest().to(['read','create','delete']),
+  allow.publicApiKey().to(['read','create','delete']),
 ]);
 
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'userPool',
+    //defaultAuthorizationMode: 'userPool',
+    defaultAuthorizationMode: 'apiKey',
+    apiKeyAuthorizationMode: { expiresInDays: 30 }
   },
 });
 

@@ -2,87 +2,51 @@ import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 //import { FileUploader } from '@aws-amplify/ui-react-storage';
 import Todo from './Todo'
+import '../CSS/Home.css'
+import AdvancedFilter from "./AdvanedFilter";
+import SimpleFilter from "./SimpleFilter";
 
 function Home(props: any) {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const[advancedFilter, setAdvancedFilter] = useState(false);
 
   useEffect(() => {
-    props.client.models.Todo.observeQuery().subscribe({
+   /* props.client.models.Todo.observeQuery().subscribe({
       next: (data: { items: any; }) => setTodos([...data.items]),
-    });
+    });*/
   }, []);
 
-  function createTodo() {
-    props.client.models.Todo.create({ content: window.prompt("Todo content") });
+  async function filterTodos(data: Array<any>) {
+    setTodos(data)
   }
 
-  async function filterTodos(filterString: string) {
-    const data = fetchTodos(filterString)
-    setTodos([...await data])
+  const searchMode = () => {
+    setAdvancedFilter(!advancedFilter);
   }
-
-  const [searchItem, setSearchItem] = useState('')
-
-  const handleInputChange = (e: { target: { value: any; }; }) => {
-    const searchTerm = e.target.value;
-    setSearchItem(searchTerm)
-  }
-
-  function keyPress(e: { keyCode: number; }) {
-    if (e.keyCode == 13) {
-      filterTodos(searchItem)
-    }
-  }
-
-  const fetchTodos = async (q: string) => {
-    const json = await props.client.models.Todo.list({
-      filter: {
-        content: {
-          beginsWith: q
-        }
-      }
-    })
-    console.log(json.data);
-    return json.data;
-  };
 
   return (
-    <main>
-      {/*<FileUploader
-        acceptedFileTypes={['*']}
-        path="Pdf_Storage/"
-        maxFileCount={1}
-        isResumable
-      />*/}
-      {
-        <div>
-          <input
-            type="text"
-            value={searchItem}
-            onChange={handleInputChange}
-            onKeyDown={keyPress}
-            placeholder='Type to search'
-          />
-          <button onClick={() => { filterTodos(searchItem) }}>search</button>
-        </div>
-      }
-
-      <h1>My todos</h1>
-
-      <button onClick={createTodo}>+ new</button>
-      <ul style={{maxHeight: '40rem'}}>
-        {todos.map((todo) => (
-          <Todo key={todo.id} client={props.client} todo={todo} />
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-    </main>
+    <div className="home">
+          <button onClick={searchMode} style={{width: "30%"}}>{advancedFilter?"Simple Search":"Advanced Search"}</button>
+          {!advancedFilter && <SimpleFilter client={props.client} filterTodos={filterTodos}/>}
+          {advancedFilter && <AdvancedFilter client={props.client} filterTodos={filterTodos} />}
+          {todos.length > 0 &&<div className="table" >
+            <div className="results header" style={{ marginBottom: '0'}}>
+             <div className="invoice-grid-row header">
+            <div>Barcode</div>
+            <div>Vendor</div>
+            <div>Invoice Date</div>
+            <div>Entry Date</div>
+            <div>Tax Code</div>
+                    </div>
+                    </div>
+                    
+                  <div className="results items" style={{maxHeight: '40rem', marginTop: '0'}}>
+                    {todos && todos.map((todo) => (
+            <Todo key={todo.id} client={props.client} todo={todo} />
+                    ))}
+                  </div>
+          </div>}
+    </div>
   );
 }
 

@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { getUrl } from 'aws-amplify/storage';
+import '../CSS/Todo.css'
 
 function Todo(props: any) {
 
     const [url, setUrl] = useState('')
 
     useEffect(() => {
-        getTodoUrl(props.todo.content)
+        getTodoUrl(props.todo.barcode)
     }, []);
 
-    /*function deleteTodo(id: string) {
-        props.client.models.Todo.delete({ id })
-      }*/
-    
+    async function deleteTodo() {
+       await props.client.models.Todo.delete(props.todo)
+      }
+
       async function getTodoUrl(id: any) {
         const linkToStorageFile = await getUrl({
           path: `Pdf_Storage/${id}.pdf`,
@@ -20,18 +21,24 @@ function Todo(props: any) {
           options: {
             bucket: "bucket",
             validateObjectExistence : true,
-            expiresIn: 30
+            expiresIn: 900
           }
         });
         setUrl( linkToStorageFile.url.toString())
+        console.log(linkToStorageFile.url.toString())
         return linkToStorageFile.url.toString()
       }
   return (
-    <div  style={{display:'flex', marginBottom: '.5rem'}}>
-            
-   <li  onClick={() =>console.log(getTodoUrl(props.todo.content))} style={{flex:'1'}}><a href={url} target="_blank">{props.todo.content}</a></li>
- 
-    {/*<button onClick={() => deleteTodo(props.todo.id)} style={{marginLeft:'.5rem'}}>Delete</button>*/}
+    <div className="invoice-grid-row"   onClick={() =>console.log(getTodoUrl(props.todo.content))}>
+
+      <div>{props.todo.barcode}</div>
+      <div>{props.todo.vendorName}</div>
+      <div>{props.todo.invoiceDate}</div>
+      <div>{props.todo.entryDate}</div>
+      <div>{props.todo.taxCode}</div>
+      <div><a href={url} target="_blank"><button>Link</button></a></div>
+      <div>{<button onClick={deleteTodo} style={{marginLeft:'.5rem'}}>Delete</button>}</div>
+      
     </div>
   );
 }
