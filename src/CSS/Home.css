@@ -1,19 +1,19 @@
 .results {
-    display: flex;
-    flex-direction: column;
-    background-color: transparent !important;
-    border:none !important;
-    border-radius: 0 !important;
-  }
+  display: flex;
+  flex-direction: column;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
 
-  .items{
-   display: grid;
-   grid-template-columns: 1fr;
-   grid-template-rows: repeat( auto-fit, 1fr);
-   overflow: scroll;
-  }
-  
-.home{
+.items {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fit, 1fr);
+  overflow: scroll;
+}
+
+.home {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -23,16 +23,20 @@
   max-height: 100%;
 }
 
-.header{
+.header {
   grid-area: header;
 }
 
+.invoice-grid-row.header{
+  padding: 1rem 1rem;
+}
+
 .invoice-grid-row {
-  flex: 1 !important;;
+  flex: 1 !important;
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr!important;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr !important;
   grid-gap: 10px;
-  padding: 10px;
+  padding: .5rem 1rem;
   border-bottom: 1px solid #f9f9f9;
   background-color: #f9f9f9 !important;
   border-bottom: 1px solid black;
@@ -43,28 +47,44 @@
   align-content: center;
 }
 
-.header >div{
- font-size: large;
- font-weight: 600;
+.header > div {
+  font-size: large;
+  font-weight: 600;
 }
 
-.table{
+.table {
   display: flex;
   flex-direction: column;
   max-height: 100% !important;
   max-width: 100% !important;
-  padding: 1rem;
   background-color: #f9f9f9;
   overflow: hidden;
-  border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 1rem;
   margin-bottom: 2rem;
 }
 
-
-
-/*.home > div{
+.home > * button:hover {
+  background-color: black !important;
+}
+.table > * a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15%;
+}
+.table > * button {
   flex: 1;
-  width: 100%;
-}*/
+  background-color: #d4002a !important;
+  color: white !important;
+  border: solid 1px #d4002a !important;
+}
+.table > * button:hover {
+  background-color: white !important;
+  color: #d4002a !important;
+}
+
+.selected{
+  background-color: rgb(217, 217, 217) !important;
+}
+

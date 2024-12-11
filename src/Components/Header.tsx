@@ -1,24 +1,39 @@
 import { Link } from 'react-router-dom'; // Assuming you're using react-router for navigation
 import '../CSS/Header.css';
+import { useState, useEffect } from 'react';
+import { fetchUserAttributes, signOut } from 'aws-amplify/auth';
+const Header = () => {
 
-const Header = (props: any) => {
+    const [userAttributes, setUserAttributes] = useState<any>(null);
+
+    async function handleFetchUserAttributes() {
+        try {
+            const userAttributes = await fetchUserAttributes();
+            console.log(userAttributes);
+            setUserAttributes(userAttributes)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        handleFetchUserAttributes()
+        //console.log(getCurrentUser())
+    }, []);
     return (
         <header>
-            <div className='imgContainer'>  <img src="https://logos-world.net/imageup/Avis/Avis_(7).png"/></div>
-             
-            <nav >
-          <Link to="/" style={{display: 'flex'}}>
-           {true && <button style={{marginBottom: '1rem', flex: '1'}}>Search</button>} 
-          </Link>
-          <Link to="/upload" style={{display: 'flex'}}>
-           {true && <button style={{marginBottom: '1rem', flex: '1'}}>Upload</button>} 
-          </Link>
-            </nav>
-
-                <div className='user'>
-                <h3>Username{props.userAttributes?.preferred_username}</h3>
-                    <button onClick={props.signOut}>Sign Out</button>
-                </div>
+            <div className='imgContainer'>  <img src="https://download.logo.wine/logo/Avis_Car_Rental/Avis_Car_Rental-Logo.wine.png" /></div>
+            {userAttributes && <nav >
+                <Link to="/" style={{ display: 'flex' }}>
+                    Search
+                </Link>
+                <Link to="/upload" style={{ display: 'flex' }}>
+                    Upload
+                </Link>
+            </nav>}
+            {userAttributes && <div className='user'>
+                <h4>{userAttributes?.preferred_username}</h4>
+                <button onClick={() => signOut()}>Sign Out</button>
+            </div>}
         </header>
     );
 };

@@ -1,13 +1,19 @@
 body {
-  background: linear-gradient(45deg,rgba(18,18,18,.4),rgba(18,18,18,0));
+  background: linear-gradient(
+    45deg,
+    rgba(18, 18, 18, 0.4),
+    rgba(18, 18, 18, 0)
+  );
   background-color: #d4002a;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-html, body, #app, #app>div{
+html,
+body,
+#app,
+#app > div {
   margin: 0 !important;
   height: 100% !important;
-  
 }
 
 button {

@@ -33,7 +33,6 @@ input[type=file]::file-selector-button {
     transition: background .2s ease-in-out;
     font-weight: 600;
     height: 2.8rem;
-
   }
   
   input[type=file]::file-selector-button:hover {
@@ -51,4 +50,11 @@ input[type=file]::file-selector-button {
     height: 2.8rem;
     font-weight: 800 !important;
   }
+
+  .upload > button:hover {
+    background-color: black !important;
+    color: white !important;
+
+  }
+
   
