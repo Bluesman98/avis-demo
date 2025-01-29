@@ -25,11 +25,11 @@ function Todo(props: any) {
       options: {
         bucket: "bucket",
         validateObjectExistence: true,
-        expiresIn: 120
+        expiresIn: 300
       }
     });
     setUrl(linkToStorageFile.url.toString())
-    console.log(linkToStorageFile.url.toString())
+    //console.log(linkToStorageFile.url.toString())
     return linkToStorageFile.url.toString()
   }
   return (

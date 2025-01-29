@@ -1,0 +1,170 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import NotFound from './NotFound';
+import { OrbitProgress } from 'react-loading-indicators';
+import '../CSS/Transaction.css';
+
+const Transaction: React.FC = () => {
+  let { id } = useParams();
+  const [transaction, setTransaction] = useState<any>(null);
+  const [error, setError] = useState(false);
+  const [results, setResults] = useState<any>(null);
+
+  const baseUrl = process.env.REACT_APP_BASE_URL!;
+  const token = process.env.REACT_APP_TOKEN!;
+
+  const getToken = () => {
+    return token;
+  };
+
+  const fetchTransactionDetails = async (transactionId: string) => {
+    try {
+      const token = getToken();
+      const response = await axios.get(`${baseUrl}/api/publicapi/v1/transactions/${transactionId}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching transaction details:', error);
+      throw error;
+    }
+  };
+
+  const fetchResults = async () => {
+    if (transaction && transaction.documents) {
+      try {
+        const results = await Promise.all(
+          transaction.documents.map(async (document: any) => {
+            const resultFile = document.resultFiles.find((file: any) => file.type === 'FieldsJson');
+            if (resultFile) {
+              const data = await fetchResultFile(transaction.id, resultFile.fileId);
+              return data;
+            }
+            return null;
+          })
+        );
+        console.log('Fetched results:', results);
+        setResults(results)
+        return results;
+      } catch (error) {
+        console.error('Error fetching results:', error);
+      }
+    }
+  };
+
+  const fetchResultFile= async (transactionId: string, fileId: string) => {
+    try {
+      const token = getToken();
+      const response = await axios.get(`${baseUrl}/api/publicapi/v1/transactions/${transactionId}/files/${fileId}/download`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching result files:', error);
+      throw error;
+    }
+  };
+
+  const downloadJSON = (data: any, filename: string) => {
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchTransactionDetails(id).then(res => {
+        setTransaction(res);
+        console.log(res)
+        if(res.documents && res.documents.length > 0) {
+          fetchResults().then(result => {
+            console.log('Results:', result);
+            setResults(result);
+          }).catch(error => {
+            console.error('Error fetching results:', error);
+          });
+        }
+      }).catch(error => {
+        console.error('Error setting transaction:', error);
+        setError(true);
+      });
+    }
+  }, []);
+
+useEffect(() => {
+  if (transaction && transaction.status !== 'Processed' /*&& manualReviewLink.length === 0*/) {
+    const interval = setInterval(myIntervalFunction, 2000);
+
+     function myIntervalFunction() {
+      if (transaction ) {
+        fetchTransactionDetails(transaction.id).then(async res => {
+          console.log(res);
+          setTransaction(res);
+          if (res.manualReviewLink && res.status !=='Processed') {
+            //clearInterval(interval);
+            console.log('Awaiting Manual Review')
+            console.log('transaction.status:',transaction.status)
+            localStorage.setItem('transaction', JSON.stringify(transaction));
+          } if (res.status === 'Processed') {
+            clearInterval(interval);
+            console.log('Transaction Complete :',res);
+            setTransaction(res);
+            //setDownload(true);
+          }
+        });
+      }
+    }
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }
+
+  else if( transaction && transaction.status == 'Processed'){
+    fetchResults().then(result => {
+      console.log('Results:', result);
+      setResults(result);
+    }).catch(error => {
+      console.error('Error fetching results:', error);
+    });
+    localStorage.setItem('transaction', JSON.stringify(transaction));
+}
+
+}, [transaction]);
+
+  if(error) return <NotFound/>;
+
+  if(transaction)return (
+    <div className='container'>
+      {transaction.id &&<h2 style={{color: 'white'}} >Transaction Id : {transaction.id}</h2>}
+      {transaction.status &&<h3 style={{color: 'white'}} >Transaction Status : {transaction.status}</h3>}
+      {<div className='status'>
+          {transaction.manualReviewLink && <div>
+          <a href={transaction.manualReviewLink} target="_blank">  <button className='review'>Manual Review</button></a>
+          </div>}
+          {transaction.status === 'Processed' && <div hidden>
+            <button onClick={()=>{console.log(fetchResults())
+            }}>Log Data</button>
+          </div>}
+          {transaction.documents && <div>
+            <button onClick={()=>{console.log(downloadJSON(results, 'results.json'))
+            }}>Download Data</button>
+          </div>}
+          {!transaction.manualReviewLink && transaction.status != 'Processed' && <div className='progress'><div style={{color:'white'}}>Processing Files . . .</div><OrbitProgress color="#ffffff" size="medium" text="" textColor="" /></div>}
+      </div>}
+    </div>
+  );
+};
+
+export default Transaction;

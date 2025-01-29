@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
 import '../CSS/SimpleFilter.css';
 
 const SimpleFilter = (props: any) => {
     const [query, setQuery] = useState('');
-
 
     const handleFilter = async () => {
         const results = await filter(query, props);

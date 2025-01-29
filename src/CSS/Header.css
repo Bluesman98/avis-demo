@@ -78,6 +78,15 @@ grid-template-columns: 1fr 3fr 2fr;
     font-size: 1em;
    }
 
+   .user > button{
+    border: 1px solid white;
+
+   }
+
+   .user > button:hover{
+    border-color: white;
+   }
+
    /*.unauth{
     margin-bottom: 10%;
    }*

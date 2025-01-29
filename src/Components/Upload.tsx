@@ -13,7 +13,6 @@ const fetchStorage = async () => {
   console.log(result)
 }
 
-
 function Upload(props: any) {
 
   const [files, setFiles] = React.useState([]);
@@ -69,6 +68,7 @@ function Upload(props: any) {
   }
 
   async function createData(metaData: Array<any>) {
+    console.group('Uploading Data');
     for (const row of metaData) {
       //createTodo(row.barcode, row.vendorName, row.invoiceDate, row.entryDate, row.taxCode)
       const result = createTodo(row.barcode, row.vendorName, row.invoiceDate, row.entryDate, row.taxCode)
@@ -98,6 +98,7 @@ function Upload(props: any) {
     const url = await getTodoUrl(barcode)
     await props.client.models.Todo.create({ barcode: barcode, vendorName: vendorName, invoiceDate: invoiceDate, entryDate: entryDate, taxCode: taxCode, url: url });
   }
+
   return (
     <div className="container">
       <div className='upload'>
@@ -124,4 +125,5 @@ function Upload(props: any) {
     </div>
   );
 }
+
 export default Upload;

@@ -1,60 +1,57 @@
-.content{
-    display: flex;
-    justify-content: center;
+.content {
+  display: flex;
+  justify-content: center;
 }
 
 .container {
-gap: .5rem;
-display: flex ;
-flex-direction: column;
-justify-content:center;
-margin-top: 5rem;
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 5rem;
 }
 
-.upload{
-    display: flex;
-    align-items: center;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 2rem;
-    margin: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    gap: 1rem;
+.upload {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
 }
-input[type=file]::file-selector-button {
-    margin-right: 20px;
-    border: none;
-    background: black;
-    padding: 10px 20px;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    transition: background .2s ease-in-out;
-    font-weight: 600;
-    height: 2.8rem;
-  }
-  
-  input[type=file]::file-selector-button:hover {
-    background: #d4002a;
-  }
+input[type="file"]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: black;
+  padding: 10px 20px;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  font-weight: 600;
+  height: 2.8rem;
+}
 
- .upload > button {
-    background-color: #d4002a !important;
-    color: white !important;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 15rem ;
-    height: 2.8rem;
-    font-weight: 800 !important;
-  }
+input[type="file"]::file-selector-button:hover {
+  background: #d4002a;
+}
 
-  .upload > button:hover {
-    background-color: black !important;
-    color: white !important;
+.upload > button {
+  background-color: #d4002a !important;
+  color: white !important;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 15rem;
+  height: 2.8rem;
+  font-weight: 800 !important;
+}
 
-  }
-
-  
+.upload > button:hover {
+  background-color: black !important;
+  color: white !important;
+}

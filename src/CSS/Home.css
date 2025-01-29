@@ -27,7 +27,7 @@
   grid-area: header;
 }
 
-.invoice-grid-row.header{
+.invoice-grid-row.header {
   padding: 1rem 1rem;
 }
 
@@ -36,7 +36,7 @@
   display: grid !important;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr !important;
   grid-gap: 10px;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid #f9f9f9;
   background-color: #f9f9f9 !important;
   border-bottom: 1px solid black;
@@ -67,7 +67,7 @@
 .home > * button:hover {
   background-color: black !important;
 }
-.table > * a{
+.table > * a {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,7 +84,6 @@
   color: #d4002a !important;
 }
 
-.selected{
+.selected {
   background-color: rgb(217, 217, 217) !important;
 }
-

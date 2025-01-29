@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import Todo from './Todo'
-import '../CSS/Home.css'
 import AdvancedFilter from "./AdvanedFilter";
 import SimpleFilter from "./SimpleFilter";
+import '../CSS/Home.css'
 
 function Home(props: any) {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
@@ -18,7 +18,7 @@ function Home(props: any) {
     setTodos(data)
   }
 
-  async function clearTodos(data: Array<any>) {
+  async function clearTodos() {
     setTodos([])
   }
 
