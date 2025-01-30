@@ -1,7 +1,7 @@
 .invoice-grid-row.transactions{
     flex: 1 !important;
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr!important;
     grid-gap: 10px;
     padding: 0.5rem 1rem !important;  
     border-bottom: 1px solid #f9f9f9;
@@ -21,4 +21,14 @@
 
   .container.transactions{
     padding: 0 15%;
+  }
+
+  .table {
+    max-height: 40rem !important; /* Set a maximum height */
+    overflow-y: auto !important;  /* Enable vertical scrolling */
+  }
+
+  .results.items {
+    max-height: 40rem !important; /* Set a maximum height */
+    overflow-y: auto !important; /* Enable vertical scrolling */
   }

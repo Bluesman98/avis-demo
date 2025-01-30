@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../CSS/Vantage.css';
 import { useNavigate } from 'react-router-dom';
+import { list, uploadData, getUrl } from 'aws-amplify/storage';
 
-const Vantage: React.FC = () => {
+function Vantage (props: any) {
 
 const baseUrl = process.env.REACT_APP_BASE_URL!;
 const token = process.env.REACT_APP_TOKEN!;

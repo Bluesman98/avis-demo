@@ -5,13 +5,14 @@ import '../CSS/TransactionList.css';
 import DatePicker from 'react-datepicker';
 
 const TransactionList: React.FC = () => {
-  const [activeTransactions, setActiveTransactions] = useState<any[]>([]);
-  const [completedTransactions, setCompletedTransactions] = useState<any[]>([]);
+  const [activeTransactions, setActiveTransactions] = useState<any>([]);
+  const [completedTransactions, setCompletedTransactions] = useState<any>([]);
   const [loadingActiveTransactions, setLoadingActiveTransactions] = useState<boolean>(true);
   const [loadingCompletedTransactions, setLoadingCompletedTransactions] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [view, setView] = useState<'active' | 'completed'>('completed');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const baseUrl = process.env.REACT_APP_BASE_URL!;
   const token = process.env.REACT_APP_TOKEN!;
@@ -33,11 +34,9 @@ const TransactionList: React.FC = () => {
       setCompletedTransactions(response.data);
       console.log(response.data);
       localStorage.setItem('completedTransactions', JSON.stringify(response.data));
-      setLoadingCompletedTransactions(false);
     } catch (error) {
       console.error('Error fetching completed transactions:', error);
       setError(true);
-      setLoadingCompletedTransactions(false);
     }
   };
 
@@ -54,11 +53,9 @@ const TransactionList: React.FC = () => {
       setActiveTransactions(response.data);
       console.log(response.data);
       localStorage.setItem('activeTransactions', JSON.stringify(response.data));
-      setLoadingActiveTransactions(false);
     } catch (error) {
       console.error('Error fetching active transactions:', error);
       setError(true);
-      setLoadingActiveTransactions(false);
     }
   };
 
@@ -101,6 +98,18 @@ const TransactionList: React.FC = () => {
     }
   }
 
+  const handleSort = (transactions: any,setTransactions: (arg0: any[]) => void) => {
+    const sortedTransactions = [...transactions].sort((a: any, b: any) => {
+      const dateA = new Date(a.createTimeUtc).getTime();
+      const dateB = new Date(b.createTimeUtc).getTime();
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+    console.log('Transactions:', transactions);
+    console.log('Sorted Transactions:', sortedTransactions);
+    setTransactions(sortedTransactions);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
   return (
 
       <div className='container transactions'>
@@ -113,12 +122,14 @@ const TransactionList: React.FC = () => {
       {view == 'active' && <TransactionTable
         loading={loadingActiveTransactions}
         error={error}
-        transactions={activeTransactions}
+        transactions={activeTransactions.items}
+       // setTransactions={setActiveTransactions}
       />}
         {view == 'completed' && <TransactionTable
         loading={loadingCompletedTransactions}
         error={error}
-        transactions={completedTransactions}
+        transactions={completedTransactions.items}
+        //setTransactions={setCompletedTransactions}
       />}
       </div>
   );

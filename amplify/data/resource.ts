@@ -16,6 +16,10 @@ const schema = a
       taxCode: a.string(),
       url: a.string(),
     }),
+    Batch: a.model({
+      transactionId: a.string(),
+      BatchName: a.string(),
+    }),
   })
   .authorization((allow) => [
     allow.authenticated().to(["read", "create", "delete"]),

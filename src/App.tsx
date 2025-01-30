@@ -14,6 +14,7 @@ import TransactionList from "./Components/TransactionList";
 import NotFound from "./Components/NotFound";
 import "@aws-amplify/ui-react/styles.css";
 import "./App.css";
+import Export from "./Components/Export";
 
 const client = generateClient<Schema>();
 
@@ -31,9 +32,10 @@ function App() {
                 <Route path="/" element={<Home client={client} />} />
                 <Route path="/upload" element={<Upload client={client} />} />
                 <Route path="/skills" element={<SkillList />} />
-                <Route path="/vantage" element={<Vantage />} />
+                <Route path="/vantage" element={<Vantage  client={client}/>} />
                 <Route path="/transaction/:id" element={<Transaction />} />
                 <Route path="/transactions" element={<TransactionList />} />
+                <Route path="/transactions/export" element={<Export />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>

@@ -1,77 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import NotFound from './NotFound';
 import { OrbitProgress } from 'react-loading-indicators';
 import '../CSS/Transaction.css';
+import { fetchTransactionDetails, fetchResults } from '../Services/transactionService';
 
 const Transaction: React.FC = () => {
   let { id } = useParams();
   const [transaction, setTransaction] = useState<any>(null);
   const [error, setError] = useState(false);
   const [results, setResults] = useState<any>(null);
-
-  const baseUrl = process.env.REACT_APP_BASE_URL!;
-  const token = process.env.REACT_APP_TOKEN!;
-
-  const getToken = () => {
-    return token;
-  };
-
-  const fetchTransactionDetails = async (transactionId: string) => {
-    try {
-      const token = getToken();
-      const response = await axios.get(`${baseUrl}/api/publicapi/v1/transactions/${transactionId}`, {
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log(response);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching transaction details:', error);
-      throw error;
-    }
-  };
-
-  const fetchResults = async () => {
-    if (transaction && transaction.documents) {
-      try {
-        const results = await Promise.all(
-          transaction.documents.map(async (document: any) => {
-            const resultFile = document.resultFiles.find((file: any) => file.type === 'FieldsJson');
-            if (resultFile) {
-              const data = await fetchResultFile(transaction.id, resultFile.fileId);
-              return data;
-            }
-            return null;
-          })
-        );
-        console.log('Fetched results:', results);
-        setResults(results)
-        return results;
-      } catch (error) {
-        console.error('Error fetching results:', error);
-      }
-    }
-  };
-
-  const fetchResultFile= async (transactionId: string, fileId: string) => {
-    try {
-      const token = getToken();
-      const response = await axios.get(`${baseUrl}/api/publicapi/v1/transactions/${transactionId}/files/${fileId}/download`, {
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching result files:', error);
-      throw error;
-    }
-  };
 
   const downloadJSON = (data: any, filename: string) => {
     const json = JSON.stringify(data, null, 2);
@@ -90,7 +28,7 @@ const Transaction: React.FC = () => {
         setTransaction(res);
         console.log(res)
         if(res.documents && res.documents.length > 0) {
-          fetchResults().then(result => {
+          fetchResults(transaction).then(result => {
             console.log('Results:', result);
             setResults(result);
           }).catch(error => {
@@ -132,7 +70,7 @@ useEffect(() => {
   }
 
   else if( transaction && transaction.status == 'Processed'){
-    fetchResults().then(result => {
+    fetchResults(transaction).then(result => {
       console.log('Results:', result);
       setResults(result);
     }).catch(error => {
@@ -154,7 +92,7 @@ useEffect(() => {
           <a href={transaction.manualReviewLink} target="_blank">  <button className='review'>Manual Review</button></a>
           </div>}
           {transaction.status === 'Processed' && <div hidden>
-            <button onClick={()=>{console.log(fetchResults())
+            <button onClick={()=>{console.log(fetchResults(transaction))
             }}>Log Data</button>
           </div>}
           {transaction.documents && <div>
